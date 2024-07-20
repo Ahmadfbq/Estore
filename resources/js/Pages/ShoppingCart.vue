@@ -43,9 +43,10 @@
                                 </div>
                                 <div class="flex flex-1 items-end justify-between text-sm">
                                   <p class="text-gray-500">Qty {{ product.quantity }}</p>
-  
+                                  <button @click="incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">+</button>
+                                  <button @click="DecrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">-</button>
                                   <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="removeProduct(product.id)">Remove</button>
                                   </div>
                                 </div>
                               </div>
@@ -89,7 +90,8 @@
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XMarkIcon } from '@heroicons/vue/24/outline'
   
-  const products = [
+  //data
+  const products = ref([
     {
       id: 1,
       name: 'Throwback Hip Bag',
@@ -112,7 +114,27 @@
         'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
     },
     // More products...
-  ]
+  ]);
+
+  //Methods
+
+  const incrementQuantity = (productId) => {
+    const product = products.value.find(p => p.id === productId);
+    if (product) {
+      product.quantity++;
+    }
+  };
+
+  const DecrementQuantity = (productId) => {
+    const product = products.value.find(p => p.id === productId);
+    if (product) {
+      product.quantity--;
+    }
+  };
+
+  const removeProduct = (productId) => {
+  products.value = products.value.filter(product => product.id !== productId);
+  };
   
   const open = ref(true)
   </script>
