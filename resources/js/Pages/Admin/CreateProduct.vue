@@ -69,7 +69,7 @@
         <label for="image" class="block text-sm font-medium text-gray-700">Image:</label>
         <input type="file" id="image" @change="handleImageUpload" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-300">
       </div>
-      <button type="submit" class="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
+      <button type="submit" class="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-blue-600 transition-colors duration-300">
         Create Product
       </button>     
     </form>

@@ -52,11 +52,11 @@ const logout = () => {
                                     Products
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <!-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('shoppingcart')" :active="route().current('shoppingcart')">
                                     Cart
                                 </NavLink>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -200,11 +200,11 @@ const logout = () => {
                             Products
                         </ResponsiveNavLink>
                     </div>
-                    <div class="pt-2 pb-3 space-y-1">
+                    <!-- <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('shoppingcart')" :active="route().current('shoppingcart')">
                             Cart
                         </ResponsiveNavLink>
-                    </div>
+                    </div> -->
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

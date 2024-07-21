@@ -1,10 +1,36 @@
+<script setup>
+import { ref } from 'vue';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { useCartStore } from '@/store/cart';
+
+const cartStore = useCartStore();
+const open = ref(false); // Set to false initially to keep the modal closed
+
+// Function to toggle the modal visibility
+const toggleModal = () => {
+  open.value = !open.value;
+};
+</script>
+
 <template>
+  <div>
+    <!-- Shopping Cart Button -->
+    <button @click="toggleModal" class="fixed bottom-4 right-4 p-3 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors">
+        <svg height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+            viewBox="0 0 512.001 512.001" fill="none" xml:space="preserve">
+            <polygon style="fill:#CFF09E;" points="146.858,390.654 451.109,390.654 479.051,232.428 118.916,232.428 "/>
+            <path style="fill:#507C5C;" d="M508.441,122.223c-2.891-3.446-7.159-5.436-11.657-5.436h-70.498c-8.404,0-15.215,6.812-15.215,15.215c0,8.403,6.812,15.215,15.215,15.215h52.361l-12.361,69.996H131.681l-12.361-69.996h222.774c8.404,0,15.215-6.812,15.215-15.215s-6.812-15.215-15.215-15.215H113.481L94.327,15.065C92.973,7.874,86.692,2.666,79.374,2.666H15.215C6.812,2.666,0,9.478,0,17.881s6.812,15.215,15.215,15.215h51.541l65.118,360.205c1.284,7.27,7.602,12.569,14.984,12.569h66.943c20.135,0,36.517,16.382,36.517,36.517s-16.382,36.517-36.517,36.517s-36.517-16.382-36.517-36.517c0-8.404-6.812-15.215-15.215-15.215c-8.403,0-15.215,6.812-15.215,15.215c0,36.916,30.032,66.948,66.948,66.948s66.948-30.032,66.948-66.948c0-13.466-4.011-26.006-10.879-36.517h114.791c20.135,0,36.517,16.382,36.517,36.517s-16.382,36.517-36.517,36.517s-36.517-16.382-36.517-36.517c0-8.404-6.812-15.215-15.215-15.215s-15.215,6.812-15.215,15.215c0,36.916,30.032,66.948,66.948,66.948s66.948-30.032,66.948-66.948c0-13.466-4.011-26.006-10.879-36.517h10.38c7.383,0,13.7-5.3,14.984-12.569l27.942-158.227l17.734-100.427C512.551,130.218,511.332,125.669,508.441,122.223z M438.345,375.44H159.622l-22.568-127.796h323.859L438.345,375.44z"/>
+        </svg>
+    </button>
+
+    <!-- Popup Modal -->
     <TransitionRoot as="template" :show="open">
       <Dialog class="relative z-10" @close="open = false">
         <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </TransitionChild>
-  
+
         <div class="fixed inset-0 overflow-hidden">
           <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -13,7 +39,7 @@
                   <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div class="flex items-start justify-between">
-                        <DialogTitle class="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
+                        <DialogTitle class="text-lg font-medium text-gray-900">Shopping Cart</DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
                           <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500" @click="open = false">
                             <span class="absolute -inset-0.5" />
@@ -22,31 +48,31 @@
                           </button>
                         </div>
                       </div>
-  
+
                       <div class="mt-8">
                         <div class="flow-root">
                           <ul role="list" class="-my-6 divide-y divide-gray-200">
-                            <li v-for="product in products" :key="product.id" class="flex py-6">
+                            <li v-for="product in cartStore.cartItems" :key="product.id" class="flex py-6">
                               <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                 <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center" />
                               </div>
-  
+
                               <div class="ml-4 flex flex-1 flex-col">
                                 <div>
                                   <div class="flex justify-between text-base font-medium text-gray-900">
                                     <h3>
                                       <a :href="product.href">{{ product.name }}</a>
                                     </h3>
-                                    <p class="ml-4">{{ product.price }}</p>
+                                    <p class="ml-4">{{ '$' + (product.price * product.quantity).toFixed(2) }}</p>
                                   </div>
                                   <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
                                 </div>
                                 <div class="flex flex-1 items-end justify-between text-sm">
                                   <p class="text-gray-500">Qty {{ product.quantity }}</p>
-                                  <button @click="incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">+</button>
-                                  <button @click="DecrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">-</button>
+                                  <button @click="cartStore.incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">+</button>
+                                  <button @click="cartStore.decrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">-</button>
                                   <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="removeProduct(product.id)">Remove</button>
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="cartStore.removeProduct(product.id)">Remove</button>
                                   </div>
                                 </div>
                               </div>
@@ -55,11 +81,11 @@
                         </div>
                       </div>
                     </div>
-  
+
                     <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div class="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p class="text-blue-700">{{ '$' + cartStore.totalPrice.toFixed(2) }}</p>
                       </div>
                       <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div class="mt-6">
@@ -69,7 +95,9 @@
                         <p>
                           or{{ ' ' }}
                           <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="open = false">
-                            Continue Shopping
+                            <Link :href="route('products')"  class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors delay-300">
+                              Continue Shopping
+                            </Link>
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
                         </p>
@@ -83,58 +111,16 @@
         </div>
       </Dialog>
     </TransitionRoot>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-  import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-  import { XMarkIcon } from '@heroicons/vue/24/outline'
-  
-  //data
-  const products = ref([
-    {
-      id: 1,
-      name: 'Throwback Hip Bag',
-      href: '#',
-      color: 'Salmon',
-      price: '$90.00',
-      quantity: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-      imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-      id: 2,
-      name: 'Medium Stuff Satchel',
-      href: '#',
-      color: 'Blue',
-      price: '$32.00',
-      quantity: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-      imageAlt:
-        'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    // More products...
-  ]);
+  </div>
+</template>
 
-  //Methods
-
-  const incrementQuantity = (productId) => {
-    const product = products.value.find(p => p.id === productId);
-    if (product) {
-      product.quantity++;
-    }
-  };
-
-  const DecrementQuantity = (productId) => {
-    const product = products.value.find(p => p.id === productId);
-    if (product) {
-      product.quantity--;
-    }
-  };
-
-  const removeProduct = (productId) => {
-  products.value = products.value.filter(product => product.id !== productId);
-  };
-  
-  const open = ref(true)
-  </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter, 
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

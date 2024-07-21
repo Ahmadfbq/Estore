@@ -18,4 +18,13 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
+    server: {
+        host: true,
+        port: 8000
+    }
 });
