@@ -4,7 +4,7 @@ import { ref, computed } from 'vue';
 export const useCartStore = defineStore('cart', () => {
   const cartItems = ref([
   {
-    id: 1,
+    id: 8,
     name: 'Throwback Hip Bag',
     href: '#',
     color: 'Salmon',
@@ -14,7 +14,7 @@ export const useCartStore = defineStore('cart', () => {
     imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
   },
   {
-    id: 2,
+    id: 9,
     name: 'Medium Stuff Satchel',
     href: '#',
     color: 'Blue',
@@ -24,8 +24,7 @@ export const useCartStore = defineStore('cart', () => {
     imageAlt:
       'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
   },
-  // More products...
-  ]);
+]);
 
   const addToCart = (product) => {
     const item = cartItems.value.find((item) => item.id === product.id);
