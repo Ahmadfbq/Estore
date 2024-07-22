@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useProductStore } from '@/store/product';
 
 const productStore = useProductStore();
@@ -73,6 +74,11 @@ const submitForm = () => {
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel class="bg-green-100 rounded-lg p-6 shadow-xl">
+              <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500" @click="open = false">
+                <span class="absolute -inset-0.5" />
+                <span class="sr-only">Close panel</span>
+                <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+              </button>
               <h1 class="text-2xl font-bold mb-6 text-center">Create Product</h1>
 
               <form @submit.prevent="submitForm" class="space-y-4">

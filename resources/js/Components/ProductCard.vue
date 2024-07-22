@@ -3,6 +3,7 @@
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
   import { XMarkIcon } from '@heroicons/vue/24/outline';
   import { useCartStore } from '@/store/cart';
+  import Swal from 'sweetalert2';
   
   const props = defineProps(['product', 'isOpen']);
   const emit = defineEmits(['update:isOpen']);
@@ -14,6 +15,15 @@
   const addToCart = () => {
     const cartStore = useCartStore();
     cartStore.addToCart(props.product);
+
+    Swal.fire({
+    icon: 'success',
+    title: 'Added to Cart',
+    text: `${props.product.name} has been added to your cart.`,
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'OK',
+    });
+
     close();
   };
   </script>

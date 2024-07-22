@@ -25,6 +25,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "pinia": "^2.1.7",
+        "sweetalert2": "^11.12.3",
         "vue-router": "^4.4.0"
     }
 }

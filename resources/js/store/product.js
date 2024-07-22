@@ -96,7 +96,9 @@ export const useProductStore = defineStore('product', () => {
     ]);
 
     const removeProduct = (productId) => {
-        products.value = products.value.filter(product => product.id !== productId);
+        if (confirm('Are you sure you want to delete this product?')) {
+            products.value = products.value.filter(product => product.id !== productId);
+        }
     };
 
     return {

@@ -2,6 +2,8 @@
   import { ref } from 'vue';
   import { Link } from '@inertiajs/vue3';
   import { useProductStore } from '@/store/product';
+  import ConfirmationDialog from '@/Components/ConfirmationDialog.vue';
+  import { XMarkIcon } from '@heroicons/vue/24/outline';
   import ProductCard from '@/Components/ProductCard.vue';
   import CreateProduct from '@/Components/CreateProduct.vue';
   import Cart from '@/Components/Cart.vue';
@@ -13,12 +15,25 @@
   const error = ref(null);
   const selectedProduct = ref(null);
   const showDetails = ref(false);
+  const showConfirmationDialog = ref(false);
 
   const viewProductDetails = (product) => {
     selectedProduct.value = product;
     showDetails.value = true;
   };
+  
+  const confirmRemoveProduct = (product) => {
+  selectedProduct.value = product;
+  showConfirmationDialog.value = true;
+};
 
+const removeProduct = () => {
+  if (selectedProduct.value) {
+    productStore.products = productStore.products.filter(product => product.id !== selectedProduct.value.id);
+    showConfirmationDialog.value = false;
+    selectedProduct.value = null; // Clear selection after removal
+  }
+};
   </script>
 
 <template>
@@ -48,9 +63,10 @@
               View Product
             </button>
             <button 
-              @click="useProductStore().removeProduct(product.id)" 
-              class="mb-4 px-14 py-2 text-red-500  font-medium hover:text-red-800 transition-colors delay-300">
-              X
+              @click="confirmRemoveProduct(product)" 
+              class="mb-4 absolute px-12 py-2 text-red-500  font-medium hover:rotate-90 transition-transform delay-300">
+              <span class="sr-only">Close panel</span>
+              <XMarkIcon class="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -61,6 +77,14 @@
 
      <!-- Shopping Cart Modal Component -->
      <Cart />
+     
+     <!-- Pupop for confirming the removal of the product -->
+     <ConfirmationDialog
+        :open="showConfirmationDialog"
+        @confirm="removeProduct"
+        @close="showConfirmationDialog = false"
+      />
+
     </div>
   </template>
   
