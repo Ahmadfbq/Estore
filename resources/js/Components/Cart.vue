@@ -3,20 +3,27 @@ import { ref } from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
+import CheckOut from '@/Components/CheckOut.vue';
+
 
 const cartStore = useCartStore();
-const open = ref(false); // Set to false initially to keep the modal closed
+const open = ref(false); 
+const showCheckoutModal = ref(false);
 
-// Function to toggle the modal visibility
 const toggleModal = () => {
   open.value = !open.value;
+};
+
+const handleCheckout = () => {
+  showCheckoutModal.value = true;
+  
 };
 </script>
 
 <template>
   <div>
     <!-- Shopping Cart Button -->
-    <button @click="toggleModal" class="fixed bottom-4 right-4 p-3 bg-gray-100 text-black rounded-full shadow-lg hover:bg-gray-300 transition-colors delay-300">
+    <button @click="toggleModal" class="fixed bottom-4 right-4 p-3 bg-green-100 text-black rounded-full shadow-lg hover:bg-green-300 transition-colors delay-300">
         <svg class="h-8 w-8 transition-transform hover:rotate-180 duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
             viewBox="0 0 512.001 512.001" fill="none" xml:space="preserve">
             <polygon style="fill:#CFF09E;" points="146.858,390.654 451.109,390.654 479.051,232.428 118.916,232.428 "/>
@@ -26,7 +33,7 @@ const toggleModal = () => {
 
     <!-- Popup Modal -->
     <TransitionRoot as="template" :show="open">
-      <Dialog class="relative z-10" @close="open = false">
+      <Dialog class="relative z-10" @close="showCheckoutModal = false">
         <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </TransitionChild>
@@ -39,9 +46,9 @@ const toggleModal = () => {
                   <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div class="flex items-start justify-between">
-                        <DialogTitle class="text-lg font-medium text-gray-900">Shopping Cart</DialogTitle>
+                        <DialogTitle class="text-lg font-medium text-green-900">Shopping Cart</DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
-                          <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500" @click="open = false">
+                          <button type="button" class="relative -m-2 p-2 text-green-400 hover:text-green-500" @click="open = false">
                             <span class="absolute -inset-0.5" />
                             <span class="sr-only">Close panel</span>
                             <XMarkIcon class="h-6 w-6" aria-hidden="true" />
@@ -51,28 +58,28 @@ const toggleModal = () => {
 
                       <div class="mt-8">
                         <div class="flow-root">
-                          <ul role="list" class="-my-6 divide-y divide-gray-200">
+                          <ul role="list" class="-my-6 divide-y divide-green-200">
                             <li v-for="product in cartStore.cartItems" :key="product.id" class="flex py-6">
-                              <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                              <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-green-200">
                                 <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center" />
                               </div>
 
                               <div class="ml-4 flex flex-1 flex-col">
                                 <div>
-                                  <div class="flex justify-between text-base font-medium text-gray-900">
+                                  <div class="flex justify-between text-base font-medium text-green-900">
                                     <h3>
                                       <a :href="product.href">{{ product.name }}</a>
                                     </h3>
                                     <p class="ml-4">{{ '$' + (product.price * product.quantity).toFixed(2) }}</p>
                                   </div>
-                                  <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
+                                  <p class="mt-1 text-sm text-green-500">{{ product.color }}</p>
                                 </div>
                                 <div class="flex flex-1 items-end justify-between text-sm">
-                                  <p class="text-gray-500">Qty {{ product.quantity }}</p>
-                                  <button @click="cartStore.incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 transition-colors delay-300 text-white rounded">+</button>
-                                  <button @click="cartStore.decrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 transition-colors delay-300 text-white rounded">-</button>
+                                  <p class="text-green-500">Qty {{ product.quantity }}</p>
+                                  <button @click="cartStore.incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-green-500 hover:bg-green-700 transition-colors delay-300 text-white rounded">+</button>
+                                  <button @click="cartStore.decrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-green-500 hover:bg-green-700 transition-colors delay-300 text-white rounded">-</button>
                                   <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="cartStore.removeProduct(product.id)">Remove</button>
+                                    <button type="button" class="font-medium text-lime-600 hover:text-lime-500" @click="cartStore.removeProduct(product.id)">Remove</button>
                                   </div>
                                 </div>
                               </div>
@@ -82,26 +89,28 @@ const toggleModal = () => {
                       </div>
                     </div>
 
-                    <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                      <div class="flex justify-between text-base font-medium text-gray-900">
+                    <div class="border-t border-green-200 px-4 py-6 sm:px-6">
+                      <div class="flex justify-between text-base font-medium text-green-900">
                         <p>Subtotal</p>
                         <p class="text-green-700">{{ '$' + cartStore.totalPrice.toFixed(2) }}</p>
                       </div>
-                      <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                      <p class="mt-0.5 text-sm text-green-500">Shipping and taxes calculated at checkout.</p>
                       <div class="mt-6 flex justify-center">
-                        <button @click="checkOut()" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-20 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</button>
+                        <CheckOut
+                          @checkout="handleCheckout"
+                          :showModal="showCheckoutModal"
+                          @close="showCheckoutModal = false"
+                        />
                       </div>
-                      <!-- <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+                      <div class="mt-6 flex justify-center text-center text-sm text-green-500">
                         <p>
                           or{{ ' ' }}
-                          <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="open = false">
-                            <Link :href="route('products')"  class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors delay-300">
+                          <button id="close" type="button" class="font-medium text-green-600 hover:text-green-500" @click="open = false">
                               Continue Shopping
-                            </Link>
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
                         </p>
-                      </div> -->
+                      </div>
                     </div>
                   </div>
                 </DialogPanel>

@@ -101,6 +101,8 @@ export const useProductStore = defineStore('product', () => {
         }
     };
 
+    
+
     return {
         products,
         removeProduct,
