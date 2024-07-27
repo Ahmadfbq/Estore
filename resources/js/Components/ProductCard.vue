@@ -79,7 +79,7 @@ const addToCart = () => {
                   <h2 class="text-3xl font-bold text-gray-900 mb-2">{{ product.name }}</h2>
                   <section aria-labelledby="information-heading" class="mt-2">
                     <h3 id="information-heading" class="sr-only">Product information</h3>
-                    <p class="text-2xl font-semibold text-gray-900">{{ '$' + product.price }}</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ 'SAR ' + product.price }}</p>
                   </section>
                 </div>
               </div>

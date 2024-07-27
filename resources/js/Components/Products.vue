@@ -62,7 +62,7 @@ const filteredProducts = computed(() => {
                 </h3>
                 <p class="mt-1 text-sm text-green-500">{{ product.color }}</p>
               </div>
-              <p class="text-sm font-medium text-green-900">{{ '$' + product.price }}</p>
+              <p class="text-sm font-medium text-green-900">{{ 'SAR ' + product.price }}</p>
             </div>
             <button 
               @click="viewProductDetails(product)" 

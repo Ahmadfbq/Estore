@@ -4,26 +4,16 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
 import CheckOut from '@/Components/CheckOut.vue';
-
+import { useModalStore } from '@/store/modal';
 
 const cartStore = useCartStore();
-const open = ref(false); 
-const showCheckoutModal = ref(false);
-
-const toggleModal = () => {
-  open.value = !open.value;
-};
-
-const handleCheckout = () => {
-  showCheckoutModal.value = true;
-  
-};
+const modalStore = useModalStore();
 </script>
 
 <template>
   <div>
     <!-- Shopping Cart Button -->
-    <button @click="toggleModal" class="fixed bottom-4 right-4 p-3 bg-green-100 text-black rounded-full shadow-lg hover:bg-green-300 transition-colors delay-300">
+    <button @click="modalStore.toggleCart" class="fixed bottom-4 right-4 p-3 bg-green-100 text-black rounded-full shadow-lg hover:bg-green-300 transition-colors delay-300">
         <svg class="h-8 w-8 transition-transform hover:rotate-180 duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
             viewBox="0 0 512.001 512.001" fill="none" xml:space="preserve">
             <polygon style="fill:#CFF09E;" points="146.858,390.654 451.109,390.654 479.051,232.428 118.916,232.428 "/>
@@ -32,8 +22,8 @@ const handleCheckout = () => {
     </button>
 
     <!-- Popup Modal -->
-    <TransitionRoot as="template" :show="open">
-      <Dialog class="relative z-10" @close="showCheckoutModal = false">
+    <TransitionRoot as="template" :show="modalStore.cartOpen">
+      <Dialog class="relative z-10" @close="modalStore.cartOpen = false">
         <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </TransitionChild>
@@ -48,7 +38,7 @@ const handleCheckout = () => {
                       <div class="flex items-start justify-between">
                         <DialogTitle class="text-lg font-medium text-green-900">Shopping Cart</DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
-                          <button type="button" class="relative -m-2 p-2 text-green-400 hover:text-green-500" @click="open = false">
+                          <button type="button" class="relative -m-2 p-2 text-green-400 hover:text-green-500" @click="modalStore.cartOpen = false">
                             <span class="absolute -inset-0.5" />
                             <span class="sr-only">Close panel</span>
                             <XMarkIcon class="h-6 w-6" aria-hidden="true" />
@@ -70,7 +60,7 @@ const handleCheckout = () => {
                                     <h3>
                                       <a :href="product.href">{{ product.name }}</a>
                                     </h3>
-                                    <p class="ml-4">{{ '$' + (product.price * product.quantity).toFixed(2) }}</p>
+                                    <p class="ml-4">{{ 'SAR ' + (product.price * product.quantity).toFixed(2) }}</p>
                                   </div>
                                   <p class="mt-1 text-sm text-green-500">{{ product.color }}</p>
                                 </div>
@@ -78,6 +68,7 @@ const handleCheckout = () => {
                                   <p class="text-green-500">Qty {{ product.quantity }}</p>
                                   <button @click="cartStore.incrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-green-500 hover:bg-green-700 transition-colors delay-300 text-white rounded">+</button>
                                   <button @click="cartStore.decrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-green-500 hover:bg-green-700 transition-colors delay-300 text-white rounded">-</button>
+                                  <!-- <button v-if="product.quantity === 0" @click="cartStore.decrementQuantity(product.id)" class="mt-2 px-4 py-2 bg-green-500 hover:bg-green-700 transition-colors delay-300 text-white rounded">,</button> -->
                                   <div class="flex">
                                     <button type="button" class="font-medium text-lime-600 hover:text-lime-500" @click="cartStore.removeProduct(product.id)">Remove</button>
                                   </div>
@@ -92,20 +83,16 @@ const handleCheckout = () => {
                     <div class="border-t border-green-200 px-4 py-6 sm:px-6">
                       <div class="flex justify-between text-base font-medium text-green-900">
                         <p>Subtotal</p>
-                        <p class="text-green-700">{{ '$' + cartStore.totalPrice.toFixed(2) }}</p>
+                        <p class="text-green-700">{{ 'SAR ' + cartStore.totalPrice.toFixed(2) }}</p>
                       </div>
                       <p class="mt-0.5 text-sm text-green-500">Shipping and taxes calculated at checkout.</p>
                       <div class="mt-6 flex justify-center">
-                        <CheckOut
-                          @checkout="handleCheckout"
-                          :showModal="showCheckoutModal"
-                          @close="showCheckoutModal = false"
-                        />
+                        <CheckOut />
                       </div>
                       <div class="mt-6 flex justify-center text-center text-sm text-green-500">
                         <p>
                           or{{ ' ' }}
-                          <button id="close" type="button" class="font-medium text-green-600 hover:text-green-500" @click="open = false">
+                          <button id="close" type="button" class="font-medium text-green-600 hover:text-green-500" @click="modalStore.cartOpen = false">
                               Continue Shopping
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
