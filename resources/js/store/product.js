@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 export const useProductStore = defineStore('product', () => {
     const products = ref([
@@ -11,7 +11,7 @@ export const useProductStore = defineStore('product', () => {
             imageAlt: "Front of men's Basic Tee in black.",
             price: 35,
             color: 'Black',
-            quantity: 0,
+            quantity: 10,
           },
           {
             id: 2,
@@ -21,7 +21,7 @@ export const useProductStore = defineStore('product', () => {
             imageAlt: "Front of men's Basic Tee in white.",
             price: 35,
             color: 'White',
-            quantity: 0,
+            quantity: 7,
           },
           {
             id: 3,
@@ -31,17 +31,17 @@ export const useProductStore = defineStore('product', () => {
             imageAlt: "Front of men's Basic Tee in gray.",
             price: 35,
             color: 'Gray',
-            quantity: 0,
+            quantity: 5,
           },
           {
             id: 4,
-            name: 'Water Bottel',
+            name: 'Water Bottle',
             href: '#',
             imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
             imageAlt: "Front of men's Basic Tee in black.",
             price: 10,
             color: 'Green',
-            quantity: 0,
+            quantity: 3,
           },
           {
             id: 5,
@@ -51,27 +51,27 @@ export const useProductStore = defineStore('product', () => {
             imageAlt: "Front of women's Basic Tee in pink.",
             price: 35,
             color: 'Pink',
-            quantity: 0,
+            quantity: 12,
           },
           {
             id: 6,
-            name: 'Weired Bottel',
+            name: 'Weird Bottle',
             href: '#',
             imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
             imageAlt: "Front of men's Basic Tee in black.",
             price: 5,
             color: 'Navy',
-            quantity: 0,
+            quantity: 14,
           },
           {
             id: 7,
-            name: 'Walet',
+            name: 'Wallet',
             href: '#',
             imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-08.jpg',
             imageAlt: "Front of men's Basic Tee in black.",
             price: 15,
             color: 'Gray',
-            quantity: 0,
+            quantity: 9,
           },
           {
             id: 8,
@@ -91,7 +91,7 @@ export const useProductStore = defineStore('product', () => {
             imageAlt: 'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
             price: 30,
             color: 'Blue',
-            quantity: 0,
+            quantity: 18,
           },
     ]);
 
@@ -101,10 +101,21 @@ export const useProductStore = defineStore('product', () => {
         }
     };
 
-    
+    const getProductById = (productId) => {
+        return products.value.find(product => product.id === productId);
+    };
+
+    const updateProductQuantity = (productId, newQuantity) => {
+      const product = getProductById(productId);
+      if (product) {
+          product.quantity = newQuantity;
+      }
+  };
 
     return {
         products,
         removeProduct,
+        getProductById,
+        updateProductQuantity,
     };
 });

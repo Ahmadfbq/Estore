@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
+import { useProductStore } from '@/store/product';
 import Swal from 'sweetalert2';
 
 const props = defineProps({
@@ -16,25 +17,73 @@ const open = ref(props.isOpen);
 // Watch for changes in props.isOpen and update local `open` state
 watch(() => props.isOpen, (newVal) => {
   open.value = newVal;
+  if (newVal) {
+    quantity.value = 1;
+  }
 });
 
 const close = () => {
   emit('update:isOpen', false);
 };
 
+const quantity = ref(1);
+const productStore = useProductStore();
+const cartStore = useCartStore();
+
+const availableQuantity = computed(() => {
+  const product = productStore.getProductById(props.product.id);
+  return product ? product.quantity : 0;
+});
+
+const incrementQuantity = () => {
+  if (quantity.value < availableQuantity.value) {
+    quantity.value++;
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Not enough stock available.',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'OK',
+    });
+  }
+};
+
+const decrementQuantity = () => {
+  if (quantity.value > 1) {
+    quantity.value--;
+  }
+};
+
+
 const addToCart = () => {
   const cartStore = useCartStore();
-  cartStore.addToCart(props.product);
+  const productInStore = productStore.getProductById(props.product.id);
 
-  Swal.fire({
-    icon: 'success',
-    title: 'Added to Cart',
-    text: `${props.product.name} has been added to your cart.`,
-    confirmButtonColor: '#3085d6',
-    confirmButtonText: 'OK',
-  });
+  if (productInStore && quantity.value <= productInStore.quantity) {
+    for (let i = 0; i < quantity.value; i++) {
+      cartStore.addToCart(props.product);
+    }
+    productStore.updateProductQuantity(props.product.id, productInStore.quantity - quantity.value);
 
-  close();
+    Swal.fire({
+      icon: 'success',
+      title: 'Added to Cart',
+      text: `${props.product.name} has been added to your cart.`,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'OK',
+    });
+
+    close();
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Not enough stock available.',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'OK',
+    });
+  }
 };
 </script>
 
@@ -80,6 +129,15 @@ const addToCart = () => {
                   <section aria-labelledby="information-heading" class="mt-2">
                     <h3 id="information-heading" class="sr-only">Product information</h3>
                     <p class="text-2xl font-semibold text-gray-900">{{ 'SAR ' + product.price }}</p>
+                    <div class="mt-4">
+                      <p class="text-gray-700">Quantity</p>
+                      <div class="flex items-center mt-2">
+                        <button @click="decrementQuantity" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-l-lg">-</button>
+                        <span class="px-4 py-2 bg-gray-100 text-gray-900">{{ quantity }}</span>
+                        <button @click="incrementQuantity" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-r-lg">+</button>
+                      </div>
+                      <p v-if="availableQuantity < 5" class="text-red-500 mt-2">Only {{ availableQuantity }} left in stock!</p>
+                    </div>
                   </section>
                 </div>
               </div>
