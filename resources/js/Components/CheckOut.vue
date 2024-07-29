@@ -56,7 +56,7 @@ const submitForm = () => {
               leave-from="opacity-100 scale-100"
               leave-to="opacity-0 scale-95"
             >
-              <DialogPanel class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
+              <DialogPanel class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md relative">
                 <button type="button" class="absolute top-4 right-4 p-2 text-green-400 hover:text-green-500" @click="modalStore.checkoutOpen = false">
                   <span class="sr-only">Close panel</span>
                   <XMarkIcon class="h-6 w-6" aria-hidden="true" />
