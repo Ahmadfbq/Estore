@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -21,16 +23,23 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/products', function () {
-        return Inertia::render('Products');
-    })->name('products');
+    
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-    Route::get('/shoppingcart', function () {
-        return Inertia::render('ShoppingCart');
-    })->name('shoppingcart');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-    Route::get('/createproduct', [ProductController::class, 'create'])->name('createproduct');
-    Route::post('/createproduct/store', [ProductController::class, 'store'])->name('createproduct.store');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 });
 
 

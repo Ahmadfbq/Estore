@@ -14,11 +14,12 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->fake()->word,
-            'description' => $this->fake()->paragraph,
-            'price' => $this->fake()->randomFloat(2, 1, 100),
-            'quantity' => $this->fake()->numberBetween(1, 100),
-            'image' => $this->fake()->imageUrl,
+            'name' => fake()->word,
+            'description' => fake()->paragraph,
+            'price' => fake()->randomFloat(2, 1, 100),
+            'quantity' => fake()->numberBetween(1, 100),
+            'image' => fake()->imageUrl,
+            'imageAlt' => fake()->sentence,
         ];
     }
 }

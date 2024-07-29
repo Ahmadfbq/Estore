@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
