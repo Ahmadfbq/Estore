@@ -23,7 +23,7 @@ const formatDate = (dateString) => {
 };
 
 const formatCurrency = (amount) => {
-  return `$${amount.toFixed(2)}`;
+  return `SAR ${amount.toFixed(2)}`;
 };
 
 const statusClass = (status) => {

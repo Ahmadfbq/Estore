@@ -21,7 +21,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Product not found');
+            return redirect()->route('products')->with('error', 'Product not found');
         }
 
         return Inertia::render('Products/Show', [
@@ -42,7 +42,7 @@ class ProductController extends Controller
 
         $product = Product::create($request->all());
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully');
+        return redirect()->route('products')->with('success', 'Product created successfully');
     }
 
     public function update(Request $request, $id)
@@ -50,7 +50,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Product not found');
+            return redirect()->route('products')->with('error', 'Product not found');
         }
 
         $request->validate([
@@ -64,7 +64,7 @@ class ProductController extends Controller
 
         $product->update($request->all());
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('products')->with('success', 'Product updated successfully');
     }
 
     public function destroy($id)
@@ -72,11 +72,11 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Product not found');
+            return redirect()->route('products')->with('error', 'Product not found');
         }
 
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully');
+        return redirect()->route('products')->with('success', 'Product deleted successfully');
     }
 }

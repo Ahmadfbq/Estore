@@ -201,6 +201,13 @@ const logout = () => {
                             Products
                         </ResponsiveNavLink>
                     </div>
+
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('orders')" :active="route().current('orders')">
+                            Orders
+                        </ResponsiveNavLink>
+                    </div>
+
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-green-200 light:border-green-600">
                         <div class="flex items-center px-4">

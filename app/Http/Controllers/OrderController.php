@@ -11,7 +11,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('products')->get();
-        return Inertia::render('Orders/Index', [
+        return Inertia::render('Orders', [
             'orders' => $orders,
         ]);
     }
@@ -21,7 +21,7 @@ class OrderController extends Controller
         $order = Order::with('products')->find($id);
 
         if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
+            return redirect()->route('orders')->with('error', 'Order not found');
         }
 
         return Inertia::render('Orders/Show', [
@@ -44,7 +44,7 @@ class OrderController extends Controller
             $order->products()->attach($request->input('products'));
         }
 
-        return redirect()->route('orders.index')->with('success', 'Order created successfully');
+        return redirect()->route('orders')->with('success', 'Order created successfully');
     }
 
     public function update(Request $request, $id)
@@ -52,7 +52,7 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
+            return redirect()->route('orders')->with('error', 'Order not found');
         }
 
         $request->validate([
@@ -62,7 +62,7 @@ class OrderController extends Controller
 
         $order->update($request->all());
 
-        return redirect()->route('orders.index')->with('success', 'Order updated successfully');
+        return redirect()->route('orders')->with('success', 'Order updated successfully');
     }
 
     public function destroy($id)
@@ -70,11 +70,11 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
+            return redirect()->route('orders')->with('error', 'Order not found');
         }
 
         $order->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Order deleted successfully');
+        return redirect()->route('orders')->with('success', 'Order deleted successfully');
     }
 }
