@@ -23,6 +23,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+     public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     protected $fillable = [
         'name',
         'email',

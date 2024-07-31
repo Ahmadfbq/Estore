@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 class UserController extends Controller
 {
+
+    public function getUsers()
+    {
+        $orders = User::latest()->get();
+        return response()->json($orders);
+    }
+
     public function updateRole(Request $request, $id)
     {
         $user = User::findOrFail($id);

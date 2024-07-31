@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <script>
+            window.$page = window.$page || {};
+            window.$page.props = window.$page.props || {};
+        
+            window.$page.props.auth = {!! json_encode([
+                'user' => auth()->check() ? auth()->user()->only('id', 'name', 'email', 'role') : null
+            ]) !!};
+        </script>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 

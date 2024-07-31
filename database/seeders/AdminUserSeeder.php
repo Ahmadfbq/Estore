@@ -12,8 +12,12 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::where('email', 'ahmdb625@gmail.com')->first();
+        $adminEmail = 'ahmdb625@gmail.com';
 
+        
+        $user = User::where('email', $adminEmail)->first();
+
+        
         if ($user) {
             $user->role = 'admin';
             $user->save();

@@ -10,10 +10,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('products')->get();
-        return Inertia::render('Orders', [
-            'orders' => $orders,
-        ]);
+        $orders = Order::with('user')->get();
+        return response()->json($orders);
     }
 
     public function show($id)

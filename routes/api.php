@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,8 +12,9 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/products', [ProductController::class, 'index']);
 
-// Route::post('/products/create', [ProductController::class, 'store'])->name('products.store');
+Route::get('/orders', [DashboardController::class, 'getOrders']);
+Route::get('/users', [UserController::class, 'getUsers']);
+Route::get('/statistics', [DashboardController::class, 'getStatistics']);
+Route::get('/top-products', [DashboardController::class, 'getTopProducts']);
 
-// Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-//     Route::post('/products', [ProductController::class, 'store']);
-// });
+

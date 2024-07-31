@@ -16,10 +16,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user() && auth()->user()->role == 'admin') {
+        if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
         }
 
-        return response()->json(['error' => 'Unauthorized.'], 403);
+        return redirect()->route('home')->with('error', 'You are not authorized to access this page.');
     }
 }
