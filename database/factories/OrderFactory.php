@@ -17,7 +17,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(), // Adjust if you have a specific user
+            'user_id' => \App\Models\User::factory(),
             'total_price' => $this->faker->randomFloat(2, 10, 500),
             'status' => 'pending',
         ];

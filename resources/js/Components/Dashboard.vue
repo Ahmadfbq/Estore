@@ -47,6 +47,23 @@
   onMounted(() => {
     fetchDashboardData();
   });
+
+  const showOrderDetails = (order) => {
+      
+      console.log('Order details:', order);
+    };
+
+  const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  return date.toLocaleString(undefined, options);
+};
   </script>
 
 <template>
@@ -59,8 +76,18 @@
         <div v-if="orders.length">
           <ul>
             <li v-for="order in orders" :key="order.id" class="border-b py-2">
-              <span class="font-medium">Order #{{ order.id }}</span> - {{ users[order.user_id]?.name || 'User not found' }} - SAR{{ order.total_price }}
-              <span class="text-gray-500 text-sm">({{ order.created_at }})</span>
+              <div class="flex justify-between items-center">
+                <div>
+                  <span class="font-medium">Order #{{ order.id }}</span> - {{ users[order.user_id]?.name || 'User not found' }} - SAR {{ order.total_price }}
+                  <span class="text-gray-500 text-sm">({{ formatDate(order.created_at) }})</span>
+                </div>
+                <button 
+                  @click="showOrderDetails(order)" 
+                  class="text-indigo-600 hover:text-indigo-900 text-sm"
+                >
+                  View Details
+                </button>
+              </div>
             </li>
           </ul>
         </div>
@@ -83,7 +110,7 @@
           </div>
           <div class="bg-white p-4 rounded-lg shadow">
             <h3 class="font-medium">Total Revenue This Month</h3>
-            <p class="text-2xl font-bold">${{ statistics.revenueThisMonth.toFixed(2) }}</p>
+            <p class="text-2xl font-bold">SAR {{ statistics.revenueThisMonth.toFixed(2) }}</p>
           </div>
         </div>
       </div>

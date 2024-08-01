@@ -1,5 +1,6 @@
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
+  import axios from 'axios';
   import { Link } from '@inertiajs/vue3';
   import { useProductStore } from '@/store/product';
   import ConfirmationDialog from '@/Components/ConfirmationDialog.vue';
@@ -15,6 +16,8 @@
   const showDetails = ref(false);
   const showConfirmationDialog = ref(false);
   const searchQuery = ref('');
+  const products = ref([]);
+
 
   const viewProductDetails = (product) => {
     selectedProduct.value = product;
@@ -42,6 +45,21 @@ const filteredProducts = computed(() => {
     product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+
+const fetchProductsData = async () => {
+    try {
+      // Fetch products
+      const productsResponse = await axios.get('/api/products');
+      products.value = productsResponse.data;
+
+    } catch (error) {
+      console.error('Error fetching products data:', error);
+    }
+  };
+  
+  onMounted(() => {
+    fetchProductsData();
+  });
   </script>
 
 <template>
@@ -51,7 +69,7 @@ const filteredProducts = computed(() => {
         <h2 class="text-2xl font-bold tracking-tight text-green-900">Our Products</h2>
         <CreateProduct />
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          <div v-for="product in (searchQuery ? filteredProducts : productStore.products)" :key="product.id" class="group relative">
+          <div v-for="product in (searchQuery ? filteredProducts : products)" :key="product.id" class="group relative">
             <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-green-200 lg:aspect-none lg:h-80">
               <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
             </div>

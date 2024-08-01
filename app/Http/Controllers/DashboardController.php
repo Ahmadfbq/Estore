@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 
@@ -19,7 +18,7 @@ class DashboardController extends Controller
     {
         $ordersThisWeek = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
         $ordersThisMonth = Order::whereMonth('created_at', now()->month)->count();
-        $revenueThisMonth = Order::whereMonth('created_at', now()->month)->sum('total');
+        $revenueThisMonth = Order::whereMonth('created_at', now()->month)->sum('total_price');
 
         return response()->json([
             'ordersThisWeek' => $ordersThisWeek,

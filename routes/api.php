@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductsViewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +13,10 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/products', [ProductController::class, 'index']);
 
-Route::get('/orders', [DashboardController::class, 'getOrders']);
+Route::get('/products', [ProductsViewController::class, 'getProducts']);
+
 Route::get('/users', [UserController::class, 'getUsers']);
+
+Route::get('/orders', [DashboardController::class, 'getOrders']);
 Route::get('/statistics', [DashboardController::class, 'getStatistics']);
 Route::get('/top-products', [DashboardController::class, 'getTopProducts']);
-
-
