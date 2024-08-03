@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 export const useProductStore = defineStore('product', () => {
     const products = ref([
@@ -110,12 +111,27 @@ export const useProductStore = defineStore('product', () => {
       if (product) {
           product.quantity = newQuantity;
       }
-  };
+    };
+
+    const fetchProductsData = async () => {
+      try {
+        const productsResponse = await axios.get('/api/products');
+        products.value.push(...productsResponse.data);        
+  
+      } catch (error) {
+        console.error('Error fetching products data:', error);
+      }
+    };
+    
+    onMounted(() => {
+      fetchProductsData();
+    });
 
     return {
         products,
         removeProduct,
         getProductById,
         updateProductQuantity,
+        fetchProductsData,
     };
 });
