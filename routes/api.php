@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderViewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductsViewController;
 use App\Http\Controllers\UserController;
@@ -14,6 +15,8 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/products', [ProductsViewController::class, 'getProducts']);
+
+Route::get('/orders', [OrderViewController::class, 'getOrders']);
 
 Route::get('/users', [UserController::class, 'getUsers']);
 

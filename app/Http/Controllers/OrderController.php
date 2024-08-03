@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('user')->get();
-        return response()->json($orders);
+        $orders = Auth::user()->orders()->latest()->get(); 
+    return response()->json($orders);
     }
 
     public function show($id)
