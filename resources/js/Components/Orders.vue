@@ -1,8 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useOrderStore } from '@/store/order';
+import OrderView from './OrderView.vue';
+import axios from 'axios';
+
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+axios.defaults.withCredentials = true;
 
 const orderStore = useOrderStore();
+const users = ref({});
+const authUserId = ref(null);
+
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(dateString).toLocaleDateString(undefined, options);
@@ -27,45 +35,40 @@ const statusClass = (status) => {
   }
 };
 
-onMounted(async () => {
-  try {
-    // Extract and fetch unique users
-    const userIds = orderStore.orders.value.map(order => order.user_id);
-    const uniqueUserIds = [...new Set(userIds)];
-
-    if (uniqueUserIds.length > 0) {
-      const usersResponse = await axios.get('/api/users', {
-        params: { ids: uniqueUserIds.join(',') }
-      });
-      users.value = usersResponse.data.reduce((acc, user) => {
-        acc[user.id] = user;
-        return acc;
-      }, {});
-    }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
+const userOrders = computed(() => {
+  if (!authUserId.value || !orderStore.orders) return [];
+  return orderStore.orders.filter(order => order.user_id === authUserId.value);
 });
 
-
-const viewOrder = (orderId) => {
-  // Handle order detail view
-  console.log(`Viewing details for order ${orderId}`);
+const fetchAuthenticatedUser = async () => {
+  try {
+    const response = await axios.get('/api/user');
+    authUserId.value = response.data.id;
+  } catch (error) {
+    console.error('Error fetching authenticated user:', error.response ? error.response.data : error.message);
+  }
 };
+
+
+
+onMounted(async () => {
+  await fetchAuthenticatedUser();
+  if (authUserId.value) {
+    await fetchOrders();
+  }
+});
 </script>
 
 <template>
     <div class="container mx-auto mt-10">
       <h1 class="text-3xl font-bold mb-5">My Orders</h1>
-      <div v-if="orderStore.orders.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div v-for="order in orderStore.orders" :key="order.id" class="bg-white p-6 rounded-lg shadow-md">
+      <div v-if="userOrders.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div v-for="order in userOrders" :key="order.id" class="bg-white p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-2">Order ID: {{ order.id }}</h2>
           <p class="text-gray-700">Date: {{ formatDate(order.created_at) }}</p>
           <p class="text-gray-700">Status: <span :class="statusClass(order.status)">{{ order.status }}</span></p>
           <p class="text-gray-700">Total: {{ formatCurrency(order.total_price) }}</p>
-          <button @click="viewOrder(order.id)" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-            View Details
-          </button>
+          <OrderView />
         </div>
       </div>
       <div v-else class="text-center py-20">
