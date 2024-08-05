@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartViewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderViewController;
 use App\Http\Controllers\ProductController;
@@ -15,6 +16,9 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/products', [ProductsViewController::class, 'getProducts']);
+
+Route::get('/cart', [CartViewController::class, 'getCart']);
+
 
 Route::get('/orders', [OrderViewController::class, 'getOrders']);
 

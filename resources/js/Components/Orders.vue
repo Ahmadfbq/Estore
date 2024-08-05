@@ -8,7 +8,6 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[nam
 axios.defaults.withCredentials = true;
 
 const orderStore = useOrderStore();
-const users = ref({});
 const authUserId = ref(null);
 
 const formatDate = (dateString) => {

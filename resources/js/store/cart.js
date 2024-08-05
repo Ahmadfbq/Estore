@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useProductStore } from './product';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export const useCartStore = defineStore('cart', () => {
@@ -123,6 +124,20 @@ export const useCartStore = defineStore('cart', () => {
     return cartItems.value.reduce((total, item) => total + item.quantity, 0);
   });
 
+  const fetchCartData = async () => {
+    try {
+      const cartResponse = await axios.get('/api/cart');
+      cartItems.value.push(...cartResponse.data);        
+
+    } catch (error) {
+      console.error('Error fetching products data:', error);
+    }
+  };
+  
+  onMounted(() => {
+    fetchCartData();
+  });
+
   return {
     cartItems,
     addToCart,
@@ -131,5 +146,6 @@ export const useCartStore = defineStore('cart', () => {
     removeProduct,
     totalPrice,
     totalItems,
+    fetchCartData,
   };
 });

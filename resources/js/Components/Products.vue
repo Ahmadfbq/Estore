@@ -1,8 +1,8 @@
 <script setup>
   import { ref, computed } from 'vue';
   import { useProductStore } from '@/store/product';
-  import ConfirmationDialog from '@/Components/ConfirmationDialog.vue';
   import { XMarkIcon } from '@heroicons/vue/24/outline';
+  import ConfirmationDialog from '@/Components/ConfirmationDialog.vue';
   import ProductCard from '@/Components/ProductCard.vue';
   import CreateProduct from '@/Components/CreateProduct.vue';
   import Cart from '@/Components/Cart.vue';
@@ -15,7 +15,9 @@
   const showConfirmationDialog = ref(false);
   const searchQuery = ref('');
   
-
+  const isAdmin = computed(() => {
+    return window.$page.props.auth?.user?.role === 'admin';
+  });
 
   const viewProductDetails = (product) => {
     selectedProduct.value = product;
@@ -50,7 +52,7 @@ const filteredProducts = computed(() => {
       <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <SearchBar v-model:searchQuery="searchQuery" />
         <h2 class="text-2xl font-bold tracking-tight text-green-900">Our Products</h2>
-        <CreateProduct />
+        <CreateProduct v-if="isAdmin" />
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           <div v-for="product in (searchQuery ? filteredProducts : productStore.products)" :key="product.id" class="group relative">
             <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-green-200 lg:aspect-none lg:h-80">
@@ -70,7 +72,8 @@ const filteredProducts = computed(() => {
               class="mb-4 px-4 py-2 bg-green-500 text-white rounded font-medium hover:bg-green-600 transition-colors delay-300">
               View Product
             </button>
-            <button 
+            <button
+              v-if="isAdmin" 
               @click="confirmRemoveProduct(product)" 
               class="mb-4 absolute px-12 py-2 text-red-500  font-medium hover:text-red-700 transition-colors delay-300">
               <span class="sr-only">Close panel</span>
