@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useOrderStore } from '@/store/order';
 import OrderView from './OrderView.vue';
-import axios from 'axios';
 
-axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-axios.defaults.withCredentials = true;
+
+const UserID = computed(() => {
+  return window.$page.props.auth?.user?.id;
+});
 
 const orderStore = useOrderStore();
 const authUserId = ref(null);
@@ -35,39 +36,21 @@ const statusClass = (status) => {
 };
 
 const userOrders = computed(() => {
-  if (!authUserId.value || !orderStore.orders) return [];
-  return orderStore.orders.filter(order => order.user_id === authUserId.value);
-});
-
-const fetchAuthenticatedUser = async () => {
-  try {
-    const response = await axios.get('/api/user');
-    authUserId.value = response.data.id;
-  } catch (error) {
-    console.error('Error fetching authenticated user:', error.response ? error.response.data : error.message);
-  }
-};
-
-
-
-onMounted(async () => {
-  await fetchAuthenticatedUser();
-  if (authUserId.value) {
-    await fetchOrders();
-  }
+  if (!UserID.value || !orderStore.orders) return [];
+  return orderStore.orders.filter(order => order.user_id === UserID.value);
 });
 </script>
 
 <template>
-    <div class="container mx-auto mt-10">
+    <div class="container mx-auto mt-10 mb-10">
       <h1 class="text-3xl font-bold mb-5">My Orders</h1>
       <div v-if="userOrders.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div v-for="order in userOrders" :key="order.id" class="bg-white p-6 rounded-lg shadow-md">
+        <div v-for="order in userOrders" :key="order.id" class="bg-gray-100 p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-2">Order ID: {{ order.id }}</h2>
           <p class="text-gray-700">Date: {{ formatDate(order.created_at) }}</p>
           <p class="text-gray-700">Status: <span :class="statusClass(order.status)">{{ order.status }}</span></p>
           <p class="text-gray-700">Total: {{ formatCurrency(order.total_price) }}</p>
-          <OrderView />
+          <OrderView :order="order" />
         </div>
       </div>
       <div v-else class="text-center py-20">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartViewController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderViewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductsViewController;
@@ -21,6 +22,7 @@ Route::get('/cart', [CartViewController::class, 'getCart']);
 
 
 Route::get('/orders', [OrderViewController::class, 'getOrders']);
+Route::patch('/orders/{id}', [OrderController::class, 'updateStatus']);
 
 Route::get('/users', [UserController::class, 'getUsers']);
 

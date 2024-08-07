@@ -2,8 +2,8 @@
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
-import CheckOut from '@/Components/CheckOut.vue';
 import { useModalStore } from '@/store/modal';
+import CheckOut from '@/Components/CheckOut.vue';
 
 
 const cartStore = useCartStore();

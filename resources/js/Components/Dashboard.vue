@@ -1,6 +1,7 @@
 <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
+  import OrderAdminView from './OrderAdminView.vue';
   
   const orders = ref([]);
   const users = ref([]);
@@ -48,11 +49,6 @@
     fetchDashboardData();
   });
 
-  const showOrderDetails = (order) => {
-      
-      console.log('Order details:', order);
-    };
-
   const formatDate = (dateString) => {
   const date = new Date(dateString);
   const options = {
@@ -81,12 +77,7 @@
                   <span class="font-medium">Order #{{ order.id }}</span> - {{ users[order.user_id]?.name || 'User not found' }} - SAR {{ order.total_price }}
                   <span class="text-gray-500 text-sm">({{ formatDate(order.created_at) }})</span>
                 </div>
-                <button 
-                  @click="showOrderDetails(order)" 
-                  class="text-indigo-600 hover:text-indigo-900 text-sm"
-                >
-                  View Details
-                </button>
+                <OrderAdminView :order="order" />
               </div>
             </li>
           </ul>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Auth::user()->orders()->latest()->get(); 
+        $orders = Auth::orders()->latest()->get(); 
     return response()->json($orders);
     }
 
@@ -76,4 +77,38 @@ class OrderController extends Controller
 
         return redirect()->route('orders')->with('success', 'Order deleted successfully');
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+       $request->validate([
+        'status' => 'required|string|in:Pending,Confirmed,Shipped,Delivered',
+    ]);
+
+    $order = Order::find($id);
+
+    if (!$order) {
+        return response()->json(['message' => 'Order not found.'], 404);
+    }
+
+    $order->status = $request->input('status');
+
+    $order->save();
+
+    return response()->json(['message' => 'Order status updated successfully.', 'order' => $order], 200);
+    }
+    
+// public function getOrdersByUser($userId)
+//     {
+//     $user = User::find($userId);
+
+//     if (!$user) {
+//         return response()->json(['message' => 'User not found.'], 404);
+//     }
+
+//     $orders = $user->orders()->latest()->get();
+
+//     return response()->json($orders, 200);
+//     }
+
 }
+

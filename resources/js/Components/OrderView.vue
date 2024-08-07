@@ -1,16 +1,12 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { useOrderStore } from '@/store/order';
-
-const orderStore = useOrderStore();
 
 const props = defineProps({
   order: Object,
   isOpen: Boolean
 });
-const emit = defineEmits(['update:isOpen']);
 
 const open = ref(props.isOpen);
 
@@ -19,12 +15,12 @@ watch(() => props.isOpen, (newVal) => {
   open.value = newVal;
 });
 
-const close = () => {
-  emit('update:isOpen', false);
-};
-
 const toggleModal = () => {
     open.value = !open.value;
+};
+
+const formatCurrency = (amount) => {
+  return `SAR ${amount.toFixed(2)}`;
 };
 
 </script>
@@ -35,7 +31,7 @@ const toggleModal = () => {
             View Details
         </button>
         <TransitionRoot as="template" :show="open">
-            <Dialog class="relative z-10" @close="close">
+            <Dialog class="relative z-10" @close="toggleModal">
               <TransitionChild 
                 as="template" 
                 enter="ease-out duration-300" 
@@ -61,17 +57,17 @@ const toggleModal = () => {
                       <button 
                         type="button" 
                         class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-                        @click="close">
+                        @click="toggleModal">
                         <span class="sr-only">Close</span>
                         <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                       </button>
         
                       <div class="grid gap-6 sm:grid-cols-12 lg:gap-8">
                         <div class="col-span-1 sm:col-span-8 lg:col-span-7">
-                          <h2 class="text-3xl font-bold text-gray-900 mb-2">{{ orderStore.orders.id }}</h2>
+                          <h2 class="text-3xl font-bold text-gray-900 mb-2">{{ order.id }}</h2>
                           <section aria-labelledby="information-heading" class="mt-2">
                             <h3 id="information-heading" class="sr-only">Order information</h3>
-                            <p class="text-2xl font-semibold text-gray-900">{{ 'SAR ' + orderStore.orders.total_price }}</p>
+                            <p class="text-2xl font-semibold text-gray-900">{{ formatCurrency(order.total_price) }}</p>
                           </section>
                         </div>
                       </div>
