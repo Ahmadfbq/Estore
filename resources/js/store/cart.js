@@ -125,9 +125,23 @@ export const useCartStore = defineStore('cart', () => {
   });
 
   const fetchCartData = async () => {
-    try {
+    try {      
       const cartResponse = await axios.get('/api/cart');
-      cartItems.value.push(...cartResponse.data);        
+      cartItems.value.push(...cartResponse.data);
+
+      const productPrice = productStore.products.map((product) => ({
+        id: product.id,
+        price: product.price,
+      }))
+      const uniqueProductPrice = [...new Set(productPrice)];
+
+      if (uniqueProductPrice.length > 0) {
+        const productsResponse = await axios.get('/api/products', {
+          params: { ids: uniqueProductPrice.map((product) => product.id).join(',') }
+        });
+        productStore.products.push(...productsResponse.data);
+      }
+
 
     } catch (error) {
       console.error('Error fetching products data:', error);

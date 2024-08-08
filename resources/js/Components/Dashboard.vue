@@ -23,7 +23,7 @@
     const uniqueUserIds = [...new Set(userIds)]; 
     
     if (uniqueUserIds.length > 0) {
-      const usersResponse = await axios.get(`/api/users`, {
+    const usersResponse = await axios.get('/api/users', {
         params: { ids: uniqueUserIds.join(',') } 
       });
       users.value = usersResponse.data.reduce((acc, user) => {
@@ -32,7 +32,6 @@
       }, {});
     }
       
-  
       // Fetch statistics
       const statsResponse = await axios.get('/api/statistics');
       statistics.value = statsResponse.data;

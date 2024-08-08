@@ -5,7 +5,6 @@ import { useCartStore } from '@/store/cart';
 import { useModalStore } from '@/store/modal';
 import CheckOut from '@/Components/CheckOut.vue';
 
-
 const cartStore = useCartStore();
 const modalStore = useModalStore();
 </script>

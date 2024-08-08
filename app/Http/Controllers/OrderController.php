@@ -6,14 +6,25 @@ use App\Models\Order;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index($userId)
     {
-        $orders = Auth::orders()->latest()->get(); 
-    return response()->json($orders);
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        $orders = $user->orders()->latest()->get();
+        return response()->json($orders, 200);
+    }
+
+    public function getOrders()
+    {
+        $orders = Order::latest()->get();
+        return response()->json($orders);
     }
 
     public function show($id)
@@ -65,19 +76,6 @@ class OrderController extends Controller
         return redirect()->route('orders')->with('success', 'Order updated successfully');
     }
 
-    public function destroy($id)
-    {
-        $order = Order::find($id);
-
-        if (!$order) {
-            return redirect()->route('orders')->with('error', 'Order not found');
-        }
-
-        $order->delete();
-
-        return redirect()->route('orders')->with('success', 'Order deleted successfully');
-    }
-
     public function updateStatus(Request $request, $id)
     {
        $request->validate([
@@ -96,19 +94,19 @@ class OrderController extends Controller
 
     return response()->json(['message' => 'Order status updated successfully.', 'order' => $order], 200);
     }
+
+    public function destroy($id)
+    {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return redirect()->route('orders')->with('error', 'Order not found');
+        }
+
+        $order->delete();
+
+        return redirect()->route('orders')->with('success', 'Order deleted successfully');
+    }
     
-// public function getOrdersByUser($userId)
-//     {
-//     $user = User::find($userId);
-
-//     if (!$user) {
-//         return response()->json(['message' => 'User not found.'], 404);
-//     }
-
-//     $orders = $user->orders()->latest()->get();
-
-//     return response()->json($orders, 200);
-//     }
-
 }
 

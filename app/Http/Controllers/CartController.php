@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Session;
@@ -14,6 +15,12 @@ class CartController extends Controller
         return Inertia::render('Cart/Index', [
             'cart' => $cart,
         ]);
+    }
+
+    public function getCart()
+    {
+        $cart = Cart::latest()->get();
+        return response()->json($cart);
     }
 
     public function add(Request $request)
