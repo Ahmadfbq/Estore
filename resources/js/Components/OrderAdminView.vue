@@ -48,7 +48,6 @@ const updateStatus = async (status) => {
   try {
     await axios.patch(`/api/orders/${props.order.id}`, { status });
     Swal.fire('Success', 'Order status updated successfully', 'success');
-    close();
   } catch (error) {
     console.error('Error updating status:', error);
     Swal.fire('Error', 'Failed to update order status', 'error');
@@ -103,7 +102,7 @@ const updateStatus = async (status) => {
                         <p class="text-gray-700">Status: {{ props.order?.status }}</p>
                         <div class="mt-4">
                           <label for="status" class="block text-sm font-medium text-gray-700">Update Status</label>
-                          <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" v-model="props.order.status" @change="updateStatus($event.target.value)">
+                          <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" :props.order.status @change="updateStatus($event.target.value)">
                             <option value="Pending">Pending</option>
                             <option value="Confirmed">Confirmed</option>
                             <option value="Shipped">Shipped</option>

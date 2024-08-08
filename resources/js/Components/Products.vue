@@ -8,7 +8,6 @@
   import Cart from '@/Components/Cart.vue';
   import SearchBar from '@/Components/SearchBar.vue';
 
-
   const productStore = useProductStore();
   const selectedProduct = ref(null);
   const showDetails = ref(false);

@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/store/cart';
 import { useProductStore } from '@/store/product';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const props = defineProps({
@@ -28,7 +29,6 @@ const close = () => {
 
 const quantity = ref(1);
 const productStore = useProductStore();
-const cartStore = useCartStore();
 
 const availableQuantity = computed(() => {
   const product = productStore.getProductById(props.product.id);
@@ -85,6 +85,18 @@ const addToCart = () => {
     });
   }
 };
+
+const addToCart1 = async (productId) => {
+  try {
+    await axios.patch(`/api/cart/${props.product.id}`, { productId });
+    Swal.fire('Success', 'Order status updated successfully', 'success');
+    close();
+  }
+  catch (error) {
+    console.error('Error adding to cart:', error);
+    Swal.fire('Error', 'Failed to add the product to the cart', 'error');
+  }
+}
 </script>
 
 <template>
@@ -142,7 +154,7 @@ const addToCart = () => {
                 </div>
               </div>
               <button 
-                @click="addToCart()" 
+                @click="addToCart1()" 
                 class="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors">
                 Add to Cart
               </button>

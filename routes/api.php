@@ -15,6 +15,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'getProducts']);
 
 Route::get('/cart', [CartController::class, 'getCart']);
+Route::patch('/cart/{id}', [CartController::class, 'add']);
 
 
 Route::get('/orders', [OrderController::class, 'getOrders']);
